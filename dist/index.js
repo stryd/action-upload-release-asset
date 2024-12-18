@@ -300,16 +300,16 @@ eval("require")("encoding");
 /***/ 19:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = authenticationPlugin
+module.exports = authenticationPlugin;
 
-const { Deprecation } = __webpack_require__(692)
-const once = __webpack_require__(969)
+const { Deprecation } = __webpack_require__(692);
+const once = __webpack_require__(969);
 
-const deprecateAuthenticate = once((log, deprecation) => log.warn(deprecation))
+const deprecateAuthenticate = once((log, deprecation) => log.warn(deprecation));
 
-const authenticate = __webpack_require__(674)
-const beforeRequest = __webpack_require__(471)
-const requestError = __webpack_require__(349)
+const authenticate = __webpack_require__(674);
+const beforeRequest = __webpack_require__(471);
+const requestError = __webpack_require__(349);
 
 function authenticationPlugin (octokit, options) {
   if (options.auth) {
@@ -321,10 +321,10 @@ function authenticationPlugin (octokit, options) {
   const state = {
     octokit,
     auth: false
-  }
-  octokit.authenticate = authenticate.bind(null, state)
-  octokit.hook.before('request', beforeRequest.bind(null, state))
-  octokit.hook.error('request', requestError.bind(null, state))
+  };
+  octokit.authenticate = authenticate.bind(null, state);
+  octokit.hook.before('request', beforeRequest.bind(null, state));
+  octokit.hook.error('request', requestError.bind(null, state));
 }
 
 
@@ -433,15 +433,15 @@ function getUserAgentNode () {
 /***/ 47:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = factory
+module.exports = factory;
 
-const Octokit = __webpack_require__(402)
-const registerPlugin = __webpack_require__(855)
+const Octokit = __webpack_require__(402);
+const registerPlugin = __webpack_require__(855);
 
 function factory (plugins) {
-  const Api = Octokit.bind(null, plugins || [])
-  Api.plugin = registerPlugin.bind(null, plugins || [])
-  return Api
+  const Api = Octokit.bind(null, plugins || []);
+  Api.plugin = registerPlugin.bind(null, plugins || []);
+  return Api;
 }
 
 
@@ -1459,28 +1459,28 @@ module.exports = require("child_process");
 /***/ 143:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = withAuthorizationPrefix
+module.exports = withAuthorizationPrefix;
 
-const atob = __webpack_require__(368)
+const atob = __webpack_require__(368);
 
-const REGEX_IS_BASIC_AUTH = /^[\w-]+:/
+const REGEX_IS_BASIC_AUTH = /^[\w-]+:/;
 
 function withAuthorizationPrefix (authorization) {
   if (/^(basic|bearer|token) /i.test(authorization)) {
-    return authorization
+    return authorization;
   }
 
   try {
     if (REGEX_IS_BASIC_AUTH.test(atob(authorization))) {
-      return `basic ${authorization}`
+      return `basic ${authorization}`;
     }
   } catch (error) { }
 
   if (authorization.split(/\./).length === 3) {
-    return `bearer ${authorization}`
+    return `bearer ${authorization}`;
   }
 
-  return `token ${authorization}`
+  return `token ${authorization}`;
 }
 
 
@@ -1547,14 +1547,14 @@ module.exports.MaxBufferError = MaxBufferError;
 /***/ 148:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = paginatePlugin
+module.exports = paginatePlugin;
 
-const iterator = __webpack_require__(8)
-const paginate = __webpack_require__(807)
+const iterator = __webpack_require__(8);
+const paginate = __webpack_require__(807);
 
 function paginatePlugin (octokit) {
-  octokit.paginate = paginate.bind(null, octokit)
-  octokit.paginate.iterator = iterator.bind(null, octokit)
+  octokit.paginate = paginate.bind(null, octokit);
+  octokit.paginate.iterator = iterator.bind(null, octokit);
 }
 
 
@@ -1612,26 +1612,26 @@ module.exports = opts => {
 /***/ 190:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = authenticationPlugin
+module.exports = authenticationPlugin;
 
-const beforeRequest = __webpack_require__(863)
-const requestError = __webpack_require__(293)
-const validate = __webpack_require__(954)
+const beforeRequest = __webpack_require__(863);
+const requestError = __webpack_require__(293);
+const validate = __webpack_require__(954);
 
 function authenticationPlugin (octokit, options) {
   if (!options.auth) {
-    return
+    return;
   }
 
-  validate(options.auth)
+  validate(options.auth);
 
   const state = {
     octokit,
     auth: options.auth
-  }
+  };
 
-  octokit.hook.before('request', beforeRequest.bind(null, state))
-  octokit.hook.error('request', requestError.bind(null, state))
+  octokit.hook.before('request', beforeRequest.bind(null, state));
+  octokit.hook.error('request', requestError.bind(null, state));
 }
 
 
@@ -3489,27 +3489,27 @@ function coerce (version) {
 /***/ 293:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = authenticationRequestError
+module.exports = authenticationRequestError;
 
-const { RequestError } = __webpack_require__(463)
+const { RequestError } = __webpack_require__(463);
 
 function authenticationRequestError (state, error, options) {
-  if (!error.headers) throw error
+  if (!error.headers) throw error;
 
-  const otpRequired = /required/.test(error.headers['x-github-otp'] || '')
+  const otpRequired = /required/.test(error.headers['x-github-otp'] || '');
   // handle "2FA required" error only
   if (error.status !== 401 || !otpRequired) {
-    throw error
+    throw error;
   }
 
   if (error.status === 401 && otpRequired && error.request && error.request.headers['x-github-otp']) {
     if (state.otp) {
-      delete state.otp // no longer valid, request again
+      delete state.otp; // no longer valid, request again
     } else {
       throw new RequestError('Invalid one-time password for two-factor authentication', 401, {
         headers: error.headers,
         request: options
-      })
+      });
     }
   }
 
@@ -3517,24 +3517,24 @@ function authenticationRequestError (state, error, options) {
     throw new RequestError('2FA required, but options.on2fa is not a function. See https://github.com/octokit/rest.js#authentication', 401, {
       headers: error.headers,
       request: options
-    })
+    });
   }
 
   return Promise.resolve()
     .then(() => {
-      return state.auth.on2fa()
+      return state.auth.on2fa();
     })
     .then((oneTimePassword) => {
       const newOptions = Object.assign(options, {
         headers: Object.assign(options.headers, { 'x-github-otp': oneTimePassword })
-      })
+      });
       return state.octokit.request(newOptions)
         .then(response => {
           // If OTP still valid, then persist it for following requests
-          state.otp = oneTimePassword
-          return response
-        })
-    })
+          state.otp = oneTimePassword;
+          return response;
+        });
+    });
 }
 
 
@@ -3543,24 +3543,24 @@ function authenticationRequestError (state, error, options) {
 /***/ 294:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = parseOptions
+module.exports = parseOptions;
 
-const { Deprecation } = __webpack_require__(692)
-const getUserAgent = __webpack_require__(794)
-const once = __webpack_require__(969)
+const { Deprecation } = __webpack_require__(692);
+const getUserAgent = __webpack_require__(794);
+const once = __webpack_require__(969);
 
-const pkg = __webpack_require__(215)
+const pkg = __webpack_require__(215);
 
-const deprecateOptionsTimeout = once((log, deprecation) => log.warn(deprecation))
-const deprecateOptionsAgent = once((log, deprecation) => log.warn(deprecation))
-const deprecateOptionsHeaders = once((log, deprecation) => log.warn(deprecation))
+const deprecateOptionsTimeout = once((log, deprecation) => log.warn(deprecation));
+const deprecateOptionsAgent = once((log, deprecation) => log.warn(deprecation));
+const deprecateOptionsHeaders = once((log, deprecation) => log.warn(deprecation));
 
 function parseOptions (options, log, hook) {
   if (options.headers) {
     options.headers = Object.keys(options.headers).reduce((newObj, key) => {
-      newObj[key.toLowerCase()] = options.headers[key]
-      return newObj
-    }, {})
+      newObj[key.toLowerCase()] = options.headers[key];
+      return newObj;
+    }, {});
   }
 
   const clientDefaults = {
@@ -3573,15 +3573,15 @@ function parseOptions (options, log, hook) {
   }
 
   if (options.baseUrl) {
-    clientDefaults.baseUrl = options.baseUrl
+    clientDefaults.baseUrl = options.baseUrl;
   }
 
   if (options.userAgent) {
-    clientDefaults.headers['user-agent'] = options.userAgent
+    clientDefaults.headers['user-agent'] = options.userAgent;
   }
 
   if (options.previews) {
-    clientDefaults.mediaType.previews = options.previews
+    clientDefaults.mediaType.previews = options.previews;
   }
 
   if (options.timeout) {
@@ -3598,14 +3598,14 @@ function parseOptions (options, log, hook) {
     deprecateOptionsHeaders(log, new Deprecation('[@octokit/rest] new Octokit({headers}) is deprecated. Use {userAgent, previews} instead. See https://github.com/octokit/request.js#request'))
   }
 
-  const userAgentOption = clientDefaults.headers['user-agent']
-  const defaultUserAgent = `octokit.js/${pkg.version} ${getUserAgent()}`
+  const userAgentOption = clientDefaults.headers['user-agent'];
+  const defaultUserAgent = `octokit.js/${pkg.version} ${getUserAgent()}`;
 
   clientDefaults.headers['user-agent'] = [userAgentOption, defaultUserAgent].filter(Boolean).join(' ')
 
-  clientDefaults.request.hook = hook.bind(null, 'request')
+  clientDefaults.request.hook = hook.bind(null, 'request');
 
-  return clientDefaults
+  return clientDefaults;
 }
 
 
@@ -3657,75 +3657,75 @@ module.exports = class HttpError extends Error {
  * property because it also exists in the response of Get the combined status for a specific ref.
  */
 
-module.exports = normalizePaginatedListResponse
+module.exports = normalizePaginatedListResponse;
 
-const { Deprecation } = __webpack_require__(692)
-const once = __webpack_require__(969)
+const { Deprecation } = __webpack_require__(692);
+const once = __webpack_require__(969);
 
-const deprecateIncompleteResults = once((log, deprecation) => log.warn(deprecation))
-const deprecateTotalCount = once((log, deprecation) => log.warn(deprecation))
-const deprecateNamespace = once((log, deprecation) => log.warn(deprecation))
+const deprecateIncompleteResults = once((log, deprecation) => log.warn(deprecation));
+const deprecateTotalCount = once((log, deprecation) => log.warn(deprecation));
+const deprecateNamespace = once((log, deprecation) => log.warn(deprecation));
 
-const REGEX_IS_SEARCH_PATH = /^\/search\//
-const REGEX_IS_CHECKS_PATH = /^\/repos\/[^/]+\/[^/]+\/commits\/[^/]+\/(check-runs|check-suites)/
-const REGEX_IS_INSTALLATION_REPOSITORIES_PATH = /^\/installation\/repositories/
-const REGEX_IS_USER_INSTALLATIONS_PATH = /^\/user\/installations/
+const REGEX_IS_SEARCH_PATH = /^\/search\//;
+const REGEX_IS_CHECKS_PATH = /^\/repos\/[^/]+\/[^/]+\/commits\/[^/]+\/(check-runs|check-suites)/;
+const REGEX_IS_INSTALLATION_REPOSITORIES_PATH = /^\/installation\/repositories/;
+const REGEX_IS_USER_INSTALLATIONS_PATH = /^\/user\/installations/;
 
 function normalizePaginatedListResponse (octokit, url, response) {
-  const path = url.replace(octokit.request.endpoint.DEFAULTS.baseUrl, '')
+  const path = url.replace(octokit.request.endpoint.DEFAULTS.baseUrl, '');
   if (
     !REGEX_IS_SEARCH_PATH.test(path) &&
     !REGEX_IS_CHECKS_PATH.test(path) &&
     !REGEX_IS_INSTALLATION_REPOSITORIES_PATH.test(path) &&
     !REGEX_IS_USER_INSTALLATIONS_PATH.test(path)
   ) {
-    return
+    return;
   }
 
   // keep the additional properties intact to avoid a breaking change,
   // but log a deprecation warning when accessed
-  const incompleteResults = response.data.incomplete_results
-  const repositorySelection = response.data.repository_selection
-  const totalCount = response.data.total_count
-  delete response.data.incomplete_results
-  delete response.data.repository_selection
-  delete response.data.total_count
+  const incompleteResults = response.data.incomplete_results;
+  const repositorySelection = response.data.repository_selection;
+  const totalCount = response.data.total_count;
+  delete response.data.incomplete_results;
+  delete response.data.repository_selection;
+  delete response.data.total_count;
 
-  const namespaceKey = Object.keys(response.data)[0]
+  const namespaceKey = Object.keys(response.data)[0];
 
-  response.data = response.data[namespaceKey]
+  response.data = response.data[namespaceKey];
 
   Object.defineProperty(response.data, namespaceKey, {
     get () {
-      deprecateNamespace(octokit.log, new Deprecation(`[@octokit/rest] "result.data.${namespaceKey}" is deprecated. Use "result.data" instead`))
-      return response.data
+      deprecateNamespace(octokit.log, new Deprecation(`[@octokit/rest] "result.data.${namespaceKey}" is deprecated. Use "result.data" instead`));
+      return response.data;
     }
-  })
+  });
 
   if (typeof incompleteResults !== 'undefined') {
     Object.defineProperty(response.data, 'incomplete_results', {
       get () {
-        deprecateIncompleteResults(octokit.log, new Deprecation('[@octokit/rest] "result.data.incomplete_results" is deprecated.'))
-        return incompleteResults
+        deprecateIncompleteResults(octokit.log, new Deprecation('[@octokit/rest] "result.data.incomplete_results" is deprecated.'));
+        return incompleteResults;
       }
-    })
+    });
   }
 
   if (typeof repositorySelection !== 'undefined') {
     Object.defineProperty(response.data, 'repository_selection', {
       get () {
-        deprecateTotalCount(octokit.log, new Deprecation('[@octokit/rest] "result.data.repository_selection" is deprecated.'))
-        return repositorySelection
+        deprecateTotalCount(octokit.log, new Deprecation('[@octokit/rest] "result.data.repository_selection" is deprecated.'));
+        return repositorySelection;
       }
-    })
+    });
   }
 
   Object.defineProperty(response.data, 'total_count', {
     get () {
-      deprecateTotalCount(octokit.log, new Deprecation('[@octokit/rest] "result.data.total_count" is deprecated.'))
-      return totalCount
+      deprecateTotalCount(octokit.log, new Deprecation('[@octokit/rest] "result.data.total_count" is deprecated.'));
+      return totalCount;
     }
-  })
+  });
 }
 
 
@@ -3734,19 +3734,19 @@ function normalizePaginatedListResponse (octokit, url, response) {
 /***/ 309:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = octokitRestNormalizeGitReferenceResponses
+module.exports = octokitRestNormalizeGitReferenceResponses;
 
-const { RequestError } = __webpack_require__(463)
+const { RequestError } = __webpack_require__(463);
 
 function octokitRestNormalizeGitReferenceResponses (octokit) {
   octokit.hook.wrap('request', (request, options) => {
-    const isGetOrListRefRequest = /\/repos\/:?\w+\/:?\w+\/git\/refs\/:?\w+/.test(options.url)
+    const isGetOrListRefRequest = /\/repos\/:?\w+\/:?\w+\/git\/refs\/:?\w+/.test(options.url);
 
     if (!isGetOrListRefRequest) {
-      return request(options)
+      return request(options);
     }
 
-    const isGetRefRequest = 'ref' in options
+    const isGetRefRequest = 'ref' in options;
 
     return request(options)
       .then(response => {
@@ -3755,19 +3755,19 @@ function octokitRestNormalizeGitReferenceResponses (octokit) {
           if (Array.isArray(response.data)) {
             throw new RequestError(`More than one reference found for "${options.ref}"`, 404, {
               request: options
-            })
+            });
           }
 
           // ✅ received single reference
-          return response
+          return response;
         }
 
         // request list of references
         if (!Array.isArray(response.data)) {
-          response.data = [response.data]
+          response.data = [response.data];
         }
 
-        return response
+        return response;
       })
 
       .catch(error => {
@@ -3849,116 +3849,116 @@ function hasLastPage (link) {
 "use strict";
 
 
-module.exports = validate
+module.exports = validate;
 
-const { RequestError } = __webpack_require__(463)
-const get = __webpack_require__(854)
-const set = __webpack_require__(883)
+const { RequestError } = __webpack_require__(463);
+const get = __webpack_require__(854);
+const set = __webpack_require__(883);
 
 function validate (octokit, options) {
   if (!options.request.validate) {
-    return
+    return;
   }
-  const { validate: params } = options.request
+  const { validate: params } = options.request;
 
   Object.keys(params).forEach(parameterName => {
-    const parameter = get(params, parameterName)
+    const parameter = get(params, parameterName);
 
-    const expectedType = parameter.type
-    let parentParameterName
-    let parentValue
-    let parentParamIsPresent = true
-    let parentParameterIsArray = false
+    const expectedType = parameter.type;
+    let parentParameterName;
+    let parentValue;
+    let parentParamIsPresent = true;
+    let parentParameterIsArray = false;
 
     if (/\./.test(parameterName)) {
-      parentParameterName = parameterName.replace(/\.[^.]+$/, '')
-      parentParameterIsArray = parentParameterName.slice(-2) === '[]'
+      parentParameterName = parameterName.replace(/\.[^.]+$/, '');
+      parentParameterIsArray = parentParameterName.slice(-2) === '[]';
       if (parentParameterIsArray) {
-        parentParameterName = parentParameterName.slice(0, -2)
+        parentParameterName = parentParameterName.slice(0, -2);
       }
-      parentValue = get(options, parentParameterName)
+      parentValue = get(options, parentParameterName);
       parentParamIsPresent = parentParameterName === 'headers' || (typeof parentValue === 'object' && parentValue !== null)
     }
 
     const values = parentParameterIsArray
       ? (get(options, parentParameterName) || []).map(value => value[parameterName.split(/\./).pop()])
-      : [get(options, parameterName)]
+      : [get(options, parameterName)];
 
     values.forEach((value, i) => {
-      const valueIsPresent = typeof value !== 'undefined'
-      const valueIsNull = value === null
+      const valueIsPresent = typeof value !== 'undefined';
+      const valueIsNull = value === null;
       const currentParameterName = parentParameterIsArray
         ? parameterName.replace(/\[\]/, `[${i}]`)
-        : parameterName
+        : parameterName;
 
       if (!parameter.required && !valueIsPresent) {
-        return
+        return;
       }
 
       // if the parent parameter is of type object but allows null
       // then the child parameters can be ignored
       if (!parentParamIsPresent) {
-        return
+        return;
       }
 
       if (parameter.allowNull && valueIsNull) {
-        return
+        return;
       }
 
       if (!parameter.allowNull && valueIsNull) {
         throw new RequestError(`'${currentParameterName}' cannot be null`, 400, {
           request: options
-        })
+        });
       }
 
       if (parameter.required && !valueIsPresent) {
         throw new RequestError(`Empty value for parameter '${currentParameterName}': ${JSON.stringify(value)}`, 400, {
           request: options
-        })
+        });
       }
 
       // parse to integer before checking for enum
       // so that string "1" will match enum with number 1
       if (expectedType === 'integer') {
-        const unparsedValue = value
-        value = parseInt(value, 10)
+        const unparsedValue = value;
+        value = parseInt(value, 10);
         if (isNaN(value)) {
           throw new RequestError(`Invalid value for parameter '${currentParameterName}': ${JSON.stringify(unparsedValue)} is NaN`, 400, {
             request: options
-          })
+          });
         }
       }
 
       if (parameter.enum && parameter.enum.indexOf(value) === -1) {
         throw new RequestError(`Invalid value for parameter '${currentParameterName}': ${JSON.stringify(value)}`, 400, {
           request: options
-        })
+        });
       }
 
       if (parameter.validation) {
-        const regex = new RegExp(parameter.validation)
+        const regex = new RegExp(parameter.validation);
         if (!regex.test(value)) {
           throw new RequestError(`Invalid value for parameter '${currentParameterName}': ${JSON.stringify(value)}`, 400, {
             request: options
-          })
+          });
         }
       }
 
       if (expectedType === 'object' && typeof value === 'string') {
         try {
-          value = JSON.parse(value)
+          value = JSON.parse(value);
         } catch (exception) {
           throw new RequestError(`JSON parse error of value for parameter '${currentParameterName}': ${JSON.stringify(value)}`, 400, {
             request: options
-          })
+          });
         }
       }
 
-      set(options, parameter.mapTo || currentParameterName, value)
-    })
-  })
+      set(options, parameter.mapTo || currentParameterName, value);
+    });
+  });
 
-  return options
+  return options;
 }
 
 
@@ -3967,44 +3967,44 @@ function validate (octokit, options) {
 /***/ 349:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = authenticationRequestError
+module.exports = authenticationRequestError;
 
-const { RequestError } = __webpack_require__(463)
+const { RequestError } = __webpack_require__(463);
 
 function authenticationRequestError (state, error, options) {
   /* istanbul ignore next */
-  if (!error.headers) throw error
+  if (!error.headers) throw error;
 
-  const otpRequired = /required/.test(error.headers['x-github-otp'] || '')
+  const otpRequired = /required/.test(error.headers['x-github-otp'] || '');
   // handle "2FA required" error only
   if (error.status !== 401 || !otpRequired) {
-    throw error
+    throw error;
   }
 
   if (error.status === 401 && otpRequired && error.request && error.request.headers['x-github-otp']) {
     throw new RequestError('Invalid one-time password for two-factor authentication', 401, {
       headers: error.headers,
       request: options
-    })
+    });
   }
 
   if (typeof state.auth.on2fa !== 'function') {
     throw new RequestError('2FA required, but options.on2fa is not a function. See https://github.com/octokit/rest.js#authentication', 401, {
       headers: error.headers,
       request: options
-    })
+    });
   }
 
   return Promise.resolve()
     .then(() => {
-      return state.auth.on2fa()
+      return state.auth.on2fa();
     })
     .then((oneTimePassword) => {
       const newOptions = Object.assign(options, {
         headers: Object.assign({ 'x-github-otp': oneTimePassword }, options.headers)
-      })
+      });
       return state.octokit.request(newOptions)
-    })
+    });
 }
 
 
@@ -4589,16 +4589,16 @@ module.exports = readShebang;
 /***/ 402:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = Octokit
+module.exports = Octokit;
 
-const { request } = __webpack_require__(753)
-const Hook = __webpack_require__(523)
+const { request } = __webpack_require__(753);
+const Hook = __webpack_require__(523);
 
-const parseClientOptions = __webpack_require__(294)
+const parseClientOptions = __webpack_require__(294);
 
 function Octokit (plugins, options) {
-  options = options || {}
-  const hook = new Hook.Collection()
+  options = options || {};
+  const hook = new Hook.Collection();
   const log = Object.assign({
     debug: () => {},
     info: () => {},
@@ -4609,11 +4609,11 @@ function Octokit (plugins, options) {
     hook,
     log,
     request: request.defaults(parseClientOptions(options, log, hook))
-  }
+  };
 
-  plugins.forEach(pluginFunction => pluginFunction(api, options))
+  plugins.forEach(pluginFunction => pluginFunction(api, options));
 
-  return api
+  return api;
 }
 
 
@@ -4676,9 +4676,9 @@ function errname(uv, code) {
 /***/ 430:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = octokitValidate
+module.exports = octokitValidate;
 
-const validate = __webpack_require__(348)
+const validate = __webpack_require__(348);
 
 function octokitValidate (octokit) {
   octokit.hook.before('request', validate.bind(null, octokit))
@@ -4694,6 +4694,7 @@ function octokitValidate (octokit) {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const os = __webpack_require__(87);
+const fs = __webpack_require__(747);
 /**
  * Commands
  *
@@ -4713,6 +4714,12 @@ function issue(name, message) {
     issueCommand(name, {}, message);
 }
 exports.issue = issue;
+function setOutput(properties, message) {
+    const outputPath = process.env.GITHUB_OUTPUT;
+    const cmd = new Command('set-output', properties, message);
+    fs.appendFileSync(outputPath, cmd.toCoreString() + '\n');
+}
+exports.setOutput = setOutput;
 const CMD_PREFIX = '##[';
 class Command {
     constructor(command, properties, message) {
@@ -4743,6 +4750,22 @@ class Command {
         // call .replace() if message is not a string for some reason
         const message = `${this.message || ''}`;
         cmdStr += escapeData(message);
+        return cmdStr;
+    }
+    toCoreString() {
+        let cmdStr = '';
+        for (const key in this.properties) {
+            if (this.properties.hasOwnProperty(key)) {
+                const val = this.properties[key];
+                if (val) {
+                    if ( cmdStr === '' ) {
+                        cmdStr +=`${key}=${escape(`${val || ''}`)}`;
+                    } else {
+                        cmdStr +=`,${key}=${escape(`${val || ''}`)}`;
+                    }
+                }
+            }
+        }
         return cmdStr;
     }
 }
@@ -6589,7 +6612,7 @@ class RequestError extends Error {
       }
 
     });
-    this.headers = options.headers; // redact request credentials without mutating original request options
+    this.headers = options.headers || {}; // redact request credentials without mutating original request options
 
     const requestCopy = Object.assign({}, options.request);
 
@@ -6726,7 +6749,9 @@ exports.getInput = getInput;
  * @param     value    value to store
  */
 function setOutput(name, value) {
-    command_1.issueCommand('set-output', { name }, value);
+    const info = {};
+    info[name] = value;
+    command_1.setOutput(info, null);
 }
 exports.setOutput = setOutput;
 //-----------------------------------------------------------------------
@@ -6776,45 +6801,45 @@ exports.warning = warning;
 /***/ 471:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = authenticationBeforeRequest
+module.exports = authenticationBeforeRequest;
 
-const btoa = __webpack_require__(675)
-const uniq = __webpack_require__(126)
+const btoa = __webpack_require__(675);
+const uniq = __webpack_require__(126);
 
 function authenticationBeforeRequest (state, options) {
   if (!state.auth.type) {
-    return
+    return;
   }
 
   if (state.auth.type === 'basic') {
-    const hash = btoa(`${state.auth.username}:${state.auth.password}`)
-    options.headers.authorization = `Basic ${hash}`
-    return
+    const hash = btoa(`${state.auth.username}:${state.auth.password}`);
+    options.headers.authorization = `Basic ${hash}`;
+    return;
   }
 
   if (state.auth.type === 'token') {
-    options.headers.authorization = `token ${state.auth.token}`
-    return
+    options.headers.authorization = `token ${state.auth.token}`;
+    return;
   }
 
   if (state.auth.type === 'app') {
-    options.headers.authorization = `Bearer ${state.auth.token}`
+    options.headers.authorization = `Bearer ${state.auth.token}`;
     const acceptHeaders = options.headers.accept.split(',')
-      .concat('application/vnd.github.machine-man-preview+json')
-    options.headers.accept = uniq(acceptHeaders).filter(Boolean).join(',')
-    return
+      .concat('application/vnd.github.machine-man-preview+json');
+    options.headers.accept = uniq(acceptHeaders).filter(Boolean).join(',');
+    return;
   }
 
-  options.url += options.url.indexOf('?') === -1 ? '?' : '&'
+  options.url += options.url.indexOf('?') === -1 ? '?' : '&';
 
   if (state.auth.token) {
-    options.url += `access_token=${encodeURIComponent(state.auth.token)}`
-    return
+    options.url += `access_token=${encodeURIComponent(state.auth.token)}`;
+    return;
   }
 
-  const key = encodeURIComponent(state.auth.key)
-  const secret = encodeURIComponent(state.auth.secret)
-  options.url += `client_id=${key}&client_secret=${secret}`
+  const key = encodeURIComponent(state.auth.key);
+  const secret = encodeURIComponent(state.auth.secret);
+  options.url += `client_id=${key}&client_secret=${secret}`;
 }
 
 
@@ -6878,32 +6903,32 @@ module.exports = resolveCommand;
 /***/ 500:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = graphql
+module.exports = graphql;
 
-const GraphqlError = __webpack_require__(862)
+const GraphqlError = __webpack_require__(862);
 
-const NON_VARIABLE_OPTIONS = ['method', 'baseUrl', 'url', 'headers', 'request', 'query']
+const NON_VARIABLE_OPTIONS = ['method', 'baseUrl', 'url', 'headers', 'request', 'query'];
 
 function graphql (request, query, options) {
   if (typeof query === 'string') {
-    options = Object.assign({ query }, options)
+    options = Object.assign({ query }, options);
   } else {
-    options = query
+    options = query;
   }
 
   const requestOptions = Object.keys(options).reduce((result, key) => {
     if (NON_VARIABLE_OPTIONS.includes(key)) {
-      result[key] = options[key]
-      return result
+      result[key] = options[key];
+      return result;
     }
 
     if (!result.variables) {
-      result.variables = {}
+      result.variables = {};
     }
 
-    result.variables[key] = options[key]
-    return result
-  }, {})
+    result.variables[key] = options[key];
+    return result;
+  }, {});
 
   return request(requestOptions)
     .then(response => {
@@ -6921,13 +6946,13 @@ function graphql (request, query, options) {
 /***/ 503:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const { request } = __webpack_require__(753)
-const getUserAgent = __webpack_require__(46)
+const { request } = __webpack_require__(753);
+const getUserAgent = __webpack_require__(46);
 
-const version = __webpack_require__(314).version
-const userAgent = `octokit-graphql.js/${version} ${getUserAgent()}`
+const version = __webpack_require__(314).version;
+const userAgent = `octokit-graphql.js/${version} ${getUserAgent()}`;
 
-const withDefaults = __webpack_require__(0)
+const withDefaults = __webpack_require__(0);
 
 module.exports = withDefaults(request, {
   method: 'POST',
@@ -6935,7 +6960,7 @@ module.exports = withDefaults(request, {
   headers: {
     'user-agent': userAgent
   }
-})
+});
 
 
 /***/ }),
@@ -7060,9 +7085,9 @@ module.exports.Collection = Hook.Collection
 /***/ 529:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-const factory = __webpack_require__(47)
+const factory = __webpack_require__(47);
 
-module.exports = factory()
+module.exports = factory();
 
 
 /***/ }),
@@ -7086,12 +7111,12 @@ function hasFirstPage (link) {
 /***/ 550:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = getNextPage
+module.exports = getNextPage;
 
-const getPage = __webpack_require__(265)
+const getPage = __webpack_require__(265);
 
 function getNextPage (octokit, link, headers) {
-  return getPage(octokit, link, 'next', headers)
+  return getPage(octokit, link, 'next', headers);
 }
 
 
@@ -7100,14 +7125,14 @@ function getNextPage (octokit, link, headers) {
 /***/ 558:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = hasPreviousPage
+module.exports = hasPreviousPage;
 
-const deprecate = __webpack_require__(370)
-const getPageLinks = __webpack_require__(577)
+const deprecate = __webpack_require__(370);
+const getPageLinks = __webpack_require__(577);
 
 function hasPreviousPage (link) {
-  deprecate(`octokit.hasPreviousPage() – You can use octokit.paginate or async iterators instead: https://github.com/octokit/rest.js#pagination.`)
-  return getPageLinks(link).prev
+  deprecate(`octokit.hasPreviousPage() – You can use octokit.paginate or async iterators instead: https://github.com/octokit/rest.js#pagination.`);
+  return getPageLinks(link).prev;
 }
 
 
@@ -7477,19 +7502,19 @@ module.exports = require("util");
 /***/ 674:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = authenticate
+module.exports = authenticate;
 
-const { Deprecation } = __webpack_require__(692)
-const once = __webpack_require__(969)
+const { Deprecation } = __webpack_require__(692);
+const once = __webpack_require__(969);
 
-const deprecateAuthenticate = once((log, deprecation) => log.warn(deprecation))
+const deprecateAuthenticate = once((log, deprecation) => log.warn(deprecation));
 
 function authenticate (state, options) {
-  deprecateAuthenticate(state.octokit.log, new Deprecation('[@octokit/rest] octokit.authenticate() is deprecated. Use "auth" constructor option instead.'))
+  deprecateAuthenticate(state.octokit.log, new Deprecation('[@octokit/rest] octokit.authenticate() is deprecated. Use "auth" constructor option instead.'));
 
   if (!options) {
-    state.auth = false
-    return
+    state.auth = false;
+    return;
   }
 
   switch (options.type) {
@@ -9189,12 +9214,12 @@ module.exports = get;
 /***/ 855:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = registerPlugin
+module.exports = registerPlugin;
 
-const factory = __webpack_require__(47)
+const factory = __webpack_require__(47);
 
 function registerPlugin (plugins, pluginFunction) {
-  return factory(plugins.includes(pluginFunction) ? plugins : plugins.concat(pluginFunction))
+  return factory(plugins.includes(pluginFunction) ? plugins : plugins.concat(pluginFunction));
 }
 
 
@@ -9234,25 +9259,25 @@ const withAuthorizationPrefix = __webpack_require__(143)
 
 function authenticationBeforeRequest (state, options) {
   if (typeof state.auth === 'string') {
-    options.headers.authorization = withAuthorizationPrefix(state.auth)
+    options.headers.authorization = withAuthorizationPrefix(state.auth);
 
     // https://developer.github.com/v3/previews/#integrations
     if (/^bearer /i.test(state.auth) && !/machine-man/.test(options.headers.accept)) {
       const acceptHeaders = options.headers.accept.split(',')
-        .concat('application/vnd.github.machine-man-preview+json')
-      options.headers.accept = acceptHeaders.filter(Boolean).join(',')
+        .concat('application/vnd.github.machine-man-preview+json');
+      options.headers.accept = acceptHeaders.filter(Boolean).join(',');
     }
 
-    return
+    return;
   }
 
   if (state.auth.username) {
-    const hash = btoa(`${state.auth.username}:${state.auth.password}`)
-    options.headers.authorization = `Basic ${hash}`
+    const hash = btoa(`${state.auth.username}:${state.auth.password}`);
+    options.headers.authorization = `Basic ${hash}`;
     if (state.otp) {
-      options.headers['x-github-otp'] = state.otp
+      options.headers['x-github-otp'] = state.otp;
     }
-    return
+    return;
   }
 
   if (state.auth.clientId) {
@@ -9267,25 +9292,25 @@ function authenticationBeforeRequest (state, options) {
     // We identify by checking the URL. It must merge both "/applications/:client_id/tokens/:access_token"
     // as well as "/applications/123/tokens/token456"
     if (/\/applications\/:?[\w_]+\/tokens\/:?[\w_]+($|\?)/.test(options.url)) {
-      const hash = btoa(`${state.auth.clientId}:${state.auth.clientSecret}`)
-      options.headers.authorization = `Basic ${hash}`
-      return
+      const hash = btoa(`${state.auth.clientId}:${state.auth.clientSecret}`);
+      options.headers.authorization = `Basic ${hash}`;
+      return;
     }
 
-    options.url += options.url.indexOf('?') === -1 ? '?' : '&'
-    options.url += `client_id=${state.auth.clientId}&client_secret=${state.auth.clientSecret}`
-    return
+    options.url += options.url.indexOf('?') === -1 ? '?' : '&';
+    options.url += `client_id=${state.auth.clientId}&client_secret=${state.auth.clientSecret}`;
+    return;
   }
 
   return Promise.resolve()
 
     .then(() => {
-      return state.auth()
+      return state.auth();
     })
 
     .then((authorization) => {
-      options.headers.authorization = withAuthorizationPrefix(authorization)
-    })
+      options.headers.authorization = withAuthorizationPrefix(authorization);
+    });
 }
 
 
@@ -10385,26 +10410,26 @@ module.exports = set;
 /***/ 899:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
-module.exports = registerEndpoints
+module.exports = registerEndpoints;
 
-const { Deprecation } = __webpack_require__(692)
+const { Deprecation } = __webpack_require__(692);
 
 function registerEndpoints (octokit, routes) {
   Object.keys(routes).forEach(namespaceName => {
     if (!octokit[namespaceName]) {
-      octokit[namespaceName] = {}
+      octokit[namespaceName] = {};
     }
 
     Object.keys(routes[namespaceName]).forEach(apiName => {
-      const apiOptions = routes[namespaceName][apiName]
+      const apiOptions = routes[namespaceName][apiName];
 
       const endpointDefaults = ['method', 'url', 'headers'].reduce((map, key) => {
         if (typeof apiOptions[key] !== 'undefined') {
-          map[key] = apiOptions[key]
+          map[key] = apiOptions[key];
         }
 
-        return map
-      }, {})
+        return map;
+      }, {});
 
       endpointDefaults.request = {
         validate: apiOptions.params
@@ -10439,38 +10464,38 @@ function registerEndpoints (octokit, routes) {
           return request.apply(null, arguments)
         }
 
-        return
+        return;
       }
 
-      octokit[namespaceName][apiName] = request
+      octokit[namespaceName][apiName] = request;
     })
   })
 }
 
 function patchForDeprecation (octokit, apiOptions, method, methodName) {
   const patchedMethod = (options) => {
-    options = Object.assign({}, options)
+    options = Object.assign({}, options);
 
     Object.keys(options).forEach(key => {
       if (apiOptions.params[key] && apiOptions.params[key].deprecated) {
-        const aliasKey = apiOptions.params[key].alias
+        const aliasKey = apiOptions.params[key].alias;
 
-        octokit.log.warn(new Deprecation(`[@octokit/rest] "${key}" parameter is deprecated for "${methodName}". Use "${aliasKey}" instead`))
+        octokit.log.warn(new Deprecation(`[@octokit/rest] "${key}" parameter is deprecated for "${methodName}". Use "${aliasKey}" instead`));
 
         if (!(aliasKey in options)) {
-          options[aliasKey] = options[key]
+          options[aliasKey] = options[key];
         }
-        delete options[key]
+        delete options[key];
       }
     })
 
-    return method(options)
+    return method(options);
   }
   Object.keys(method).forEach(key => {
-    patchedMethod[key] = method[key]
-  })
+    patchedMethod[key] = method[key];
+  });
 
-  return patchedMethod
+  return patchedMethod;
 }
 
 
@@ -10514,26 +10539,26 @@ module.exports = function(fn) {
 /***/ 954:
 /***/ (function(module) {
 
-module.exports = validateAuth
+module.exports = validateAuth;
 
 function validateAuth (auth) {
   if (typeof auth === 'string') {
-    return
+    return;
   }
 
   if (typeof auth === 'function') {
-    return
+    return;
   }
 
   if (auth.username && auth.password) {
-    return
+    return;
   }
 
   if (auth.clientId && auth.clientSecret) {
-    return
+    return;
   }
 
-  throw new Error(`Invalid "auth" option: ${JSON.stringify(auth)}`)
+  throw new Error(`Invalid "auth" option: ${JSON.stringify(auth)}`);
 }
 
 
